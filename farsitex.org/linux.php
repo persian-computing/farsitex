@@ -1,0 +1,318 @@
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US"lang="en-US">
+<head>
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+  <meta name="author" content="Behdad Esfahbod" />
+  <meta name="copyright" content="&copy; 2000--2007 Behdad Esfahbod." />
+  <title>The FarsiTeX Project</title>
+  <link rel="stylesheet" type="text/css" href="style/main.css" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+
+  <meta name="keywords" content="Farsi,Persian,FarsiTeX,Desktop Publishing,
+    Typesetting,LaTeX,TeX,METAFONT,XML,PDF" />
+  <meta name="description" content="FarsiTeX is a free Persian/English
+    bidirectional typesetting system based on Donald Knuth's TeX Program. 
+    TeX and his friend METAFONT have served mathematicians and technical
+    writers all over the world for many years and helped them to write
+    prettier and easier." />
+</head>
+<body>
+<table width="99%"><tr>
+<td><img src="image/logo/FarsiTeX600pxe.png" alt="FarsiTeX Logo, English"width="320" height="120" /></td>
+<td align="right"><img src="image/logo/FarsiTeX600pxf.png" alt="FarsiTeX Logo, Persian"width="280" height="120" /></td>
+</tr></table>
+<table summary="Layout table: The first cell contains a navigation bar of
+site pages, and second contains current page." border="0"
+cellpadding="10" cellspacing="0">
+<colgroup>
+<col width="20%" />
+<col width="*" />
+</colgroup>
+<tbody>
+<tr>
+<td valign="top" class="navbar">
+<ul class="navlist"><li class="listitem"><a href="about.php">Home</a>
+</li>
+<li class="listitem"><a href="summary.php">Summary</a>
+</li>
+<li class="listitem"><a href="download.php">Download</a>
+</li>
+<li class="listitem"><a href="bugs.php">Bugs</a>
+<ul><li class="listitem"><a href="bugs_known.php">Known Bugs</a>
+</li>
+<li class="listitem"><a href="bugs_submit.php">Report a Bug</a>
+</li>
+</ul></li><li class="listitem"><a href="lists.php">Mailing Lists</a>
+</li>
+<li class="listitem"><a href="team.php">Project Team</a>
+</li>
+<li class="listitem"><a href="legal.php">Legal Issues</a>
+</li>
+<li class="listitem"><a href="helpus.php">Help Us</a>
+</li>
+</ul></td>
+<td valign="top" class="main">
+<style>
+pre {
+	background: #eee;
+	border: solid 1px #ddd;
+	padding: .5em;
+	margin-right: 2em;
+}
+</style>
+
+<h1>Installing FarsiTeX 1.0pre1 under teTeX/Unix/Linux/...</h1>
+<p>
+So you read the manual and release notes, and want to give it a shot on Linux, eh?
+Ok, here are the instructions, but, if you have any problems following them,
+please do not contact me.  Chances are high that I don't know what is wrong
+on your system.
+Feel free to write to the <a
+href="https://lists.sourceforge.net/lists/listinfo/farsitex-user">farsitex-user
+list</a> though.
+</p><p>
+Make sure you read this page to the end before starting your install.
+These have been tested on Fedora Core 6.  They should work on Ubuntu and other
+modern systems.  Make sure you have teTeX and WINE installed before continuing.
+</p>
+
+<h2>Installing the Engine</h2>
+<ol>
+
+<li>
+Grab and unpack the <a
+href="http://internap.dl.sourceforge.net/sourceforge/farsitex/farsitex-1.0pre1.tar.bz2">tarball</a>
+(16M) into your home directory (It will create <code>~/texmf</code>, if it doesn't
+exist):
+<pre>
+cd ~
+wget http://internap.dl.sourceforge.net/sourceforge/farsitex/farsitex-1.0pre1.tar.bz2
+tar jxf farsitex-1.0pre1.tar.bz2
+</pre>
+</li>
+
+<li>
+Copy or symlink these files into PATH, eg. in <code>~/bin</code>
+(You may need to rebuild the first two for your architecture.  Just change to
+their directory and run <code>make clean all</code>):
+<pre>
+mkdir -p ~/bin
+ln -f -s ~/texmf/source/farsitex/ftx2tex/ftx2tex ~/bin
+ln -f -s ~/texmf/source/farsitex/fmakeidx/fmakeidx ~/bin
+ln -f -s ~/texmf/scripts/farsitex/bin/* ~/bin
+</pre>
+</li>
+
+<li>
+Copy the <code>farsitex.map</code> file into its new location under teTeX 3.0.
+After this, it should work with all versions of teTeX (you may get some
+warnings.  Just ignore them.):
+<pre>
+mkdir -p ~/texmf/fonts/map/dvips
+cp -r ~/texmf/dvips/farsitex ~/texmf/fonts/map/dvips/
+</pre>
+</li>
+
+<li>
+Recent versions of teTeX use pdfeTeX as their default TeX engine, and FarsiTeX
+detects that and enables PDF output.  To fix this we need to shuffle some bits around.
+In short, duplicate <code>farsitex.ini</code> so we can modify it for DVI output but
+not PDF; turn PDF off, by removing the first line of <code>fadvitex.ini</code>;
+and create a new <code>fmtutil.cnf</code> to use the new fadvitex.ini file:
+
+<pre>
+tail -n +2 ~/texmf/tex/farsitex/config/farsitex.ini &gt; ~/texmf/tex/farsitex/config/fadvitex.ini
+echo "farsitex etex - *fadvitex.ini" &gt; ~/texmf/tetex/fmtutil.cnf
+echo "fapdftex pdfetex - *farsitex.ini" &gt;&gt; ~/texmf/tetex/fmtutil.cnf
+</pre>
+</li>
+
+<li>
+Now, update teTeX's file database by running:
+<pre>
+texhash
+</pre>
+</li>
+
+<li>
+Build the formats:
+<pre>
+fmtutil --cnffile ~/texmf/tetex/fmtutil.cnf --byfmt farsitex
+fmtutil --cnffile ~/texmf/tetex/fmtutil.cnf --byfmt fapdftex
+</pre>
+</li>
+
+<li>
+Enable the font mappings:
+<pre>
+updmap --enable MixedMap=farsitex.map
+</pre>
+</li>
+
+<!--li>
+Configure your font resolution.  You can either run <code>texconfig</code>, 
+choose MODE, and select a mode suitable for your printer, or, if you don't have a
+printer, choose <code>ljfour</code> (600dpi):
+<pre>
+texconfig mode ljfour
+</pre>
+or <code>ljfzzz</code> (1200dpi):
+<pre>
+texconfig mode ljfzzz
+</pre>
+</li-->
+
+<li>
+That's it.  Test your brand new FarsiTeX installation:
+<pre>
+# convert FTX to TEX
+ftx2tex ~/texmf/doc/persian/farsitex/base/ftexthes/test.ftx
+# create DVI
+farsitex ~/texmf/doc/persian/farsitex/base/ftexthes/test.tex
+# create PDF
+fapdftex ~/texmf/doc/persian/farsitex/base/ftexthes/test.tex
+</pre>
+If everything went as expected, these should create <code>./test.dvi</code>,
+demonstrating various new features of FarsiTeX, and its PDF version
+<code./test.pdf</code> with
+shiny embedded vector fonts.
+</p><p>
+Read <code>~/texmf/doc/persian/farsitex/base/ftexthes/ftexthes.pdf</code> for
+features in this FarsiTeX version.
+</p><p>
+You can use the <code>ftex</code> script that calls both of <code>ftx2tex</code>
+and <code>farsitex</code> for you, but note that its <code>--out</code> argument
+is not implemented and does not work, so you cannot create PDF using the
+<code>ftex</code> script.
+</li>
+
+</ol>
+
+<h2>Editor</h2>
+<p>
+The <code>ftexed</code> editor can be run under <a
+href="http://www.winehq.com/">WINE</a>.
+</p><p>
+With older versions of WINE, you needed to install this <a
+href="files/farsitex.bdf">farsitex.bdf</a> font and tweak
+your WINE configuration to make sure it finds and uses it.  It was not easy
+though.
+</p><p>
+The good news is, with recent versions of WINE (eg. 0.9.27), it uses the
+Windows font installed by the installer and it all Just Works.
+</p>
+<ol>
+
+<li>
+Start by downloading and installing <a
+href="http://umn.dl.sourceforge.net/sourceforge/farsitex/farsitex-editor-alpha9.1.exe">the
+Windows installer</a> (644K) (Select Next in every step, and finally Finish):
+<pre>
+wget http://umn.dl.sourceforge.net/sourceforge/farsitex/farsitex-editor-alpha9.1.exe
+wine farsitex-editor-alpha9.1.exe
+</pre>
+</li>
+
+<li>
+We need to update the font editor uses to one that reflects changes in
+farsitex-1.0pre1.  This is only necessary if you didn't have to get the
+<code>farsitex.bdf</code> font working.  This step depends a bit on your
+WINE configuration.  Move the font manually if it doesn't work.
+<pre>
+wget http://farsitex.org/files/farsitex.fon
+mv farsitex.fon ~/.wine/*/[Ww]indows/[Ff]onts/
+rm -f ~/.wine/*/[Ww]indows/[Ff]onts/FarsiTeX.fon
+</pre>
+</li>
+
+<li>
+Create a shell script named <code>ftexed</code> to launch it.
+We need to find where the installer placed <code>Ftexed.exe</code>, and run it
+under WINE.  This depends on your WINE configuration.  Tweak if this doesn't
+work:
+<pre>
+echo "wine ~/.wine/*/Program\ Files/MikTeX/miktex/bin/Ftexed.exe" &gt; ~/bin/ftexed
+chmod a+x ~/bin/ftexed
+</pre>
+</li>
+
+<li>
+That's almost it!  You should even find a launch icon on your desktop.
+The items in the Run menu don't work yet.  Use command-line tools instead.
+Launch it:
+<pre>
+ftexed
+</pre>
+</li>
+
+<li>
+Making the Run menu launchers work needs some more involved magic.
+So I'll don't write it down here.  Just grab the script and let it do.
+The ftex-to-unicode item still doesn't work as the converter doesn't
+quite exist, but the rest should work nicely.  Uses xdvi to view DVI:
+<pre>
+wget http://farsitex.org/files/install-ftexed-cmd-launchers.sh
+bash install-ftexed-cmd-launchers.sh
+</pre>
+</li>
+
+
+</ol>
+
+<h2>All in One</h2>
+The instructions above can also be all run using <a
+href="files/install-farsitex-1.0pre1.sh">this</a> shell
+script:
+<pre>
+wget http://farsitex.org/files/install-farsitex-1.0pre1.sh
+sh install-farsitex-1.0pre1.sh
+</pre>
+If you have already downloaded the tarball, download and tweak the script to
+suite your situation.
+
+<h2>Troubleshooting</h2>
+<dl>
+
+<di>The editor installer does not start, errs about visuals and libGL</di>
+<dd>
+I've seen this on a AIGLX-enabled X with intel graphics card.
+Try turning AIGLX off.  Probably a driver issue.
+</dd>
+
+<di>Something else doesn't work</di>
+<dd>
+Try figuring out what failed.  If you can't, you probably shouldn't be running
+FarsiTeX on Linux.  Anyway, please DON'T MAIL ME.  Write to the <a
+href="https://lists.sourceforge.net/lists/listinfo/farsitex-user">farsitex-user
+list</a>.
+</dd>
+
+</dl>
+
+<h2>Revision History</h2>
+<dl>
+
+<di>May 15, 2007</di>
+<dd>Added editor Run menu launcher setup script.</dd>
+
+<di>January 2007</di>
+<dd>Initial write-up.</dd>
+
+</dl>
+<hr /></td>
+</tr>
+</tbody>
+</table>
+
+<table width="99%" style="vertical-align: middle;"><tr><td> <a href="http://sourceforge.net/projects/farsitex"><img src="http://sourceforge.net/sflogo.php?group_id=7710&amp;type=1" style="border: 0; vertical-align: top" alt="SourceForge" /></a>
+ <a href="http://sourceforge.net/donate/index.php?group_id=7710"><img src="http://images.sourceforge.net/images/project-support.jpg" style="border: 0; vertical-align: top" alt="Support This Project" /></a>
+</td><td align="right">
+<address>To <a href="mailto:behdad@users.sourceforge.net">webmaster</a></address>
+<span class="copyright">Copyright &copy; 2000--2007 
+<a href="http://behdad.org/">Behdad Esfahbod</a></span>
+</td></tr></table>
+</body>
+</html>

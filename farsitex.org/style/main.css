@@ -1,0 +1,166 @@
+/* ****************** Style for page body *************** */
+
+body {
+   font-family: sans-serif;
+   color: #000;
+}
+
+body, a:link, a:visited, a:active, h2{
+   background: #ffe;
+}
+
+a:link {
+   color: #037;
+}
+
+a:visited {
+   color: #551a8b;
+}
+
+a:active {
+   color: #800;
+   text-decoration: none;
+}
+
+.center, #logo {
+   text-align: center;
+}
+
+h2 {
+   color: #800;
+}
+
+.copyright a {
+   text-decoration: none;
+}
+
+.helpuslist dt {
+  font-weight: bold;
+}
+
+hr {
+  border: 0;
+  background: #900;
+  height: 1px;
+}
+
+/* ****************** Style for main frame ****************** */
+
+.main {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* ****************** Style for navigation bar ************** */
+
+.navbar {
+  background: #900;
+  color: #FFE;
+}
+
+td.navbar {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: #900;             /* Override according to type of page */
+  border: thin outset #900;     /* Override this color together with bg */
+  color: white;
+}
+
+.navbar ul {
+  margin-left: 0.5em; 
+  padding-left: 0.5em;
+  line-height: 2.8ex;
+  padding-bottom: 0.3ex;
+}
+
+ul.navlist {
+  padding-top: 0.3ex;
+  margin-top: 0.3ex;
+  margin-left: 0.3em;
+  padding-left: 0.3em;
+  list-style: none;
+}
+
+.navlist ul {
+  list-style: none;
+}
+
+.navlist li {
+  color: #777;
+}
+
+.navlist li .selecteditem {
+  color: white;
+  font-weight: bold;
+}
+
+input {
+   font-size: 83%;
+   font-family: Geneva, Arial, sans-serif;
+}
+
+/* next three rules for acronyms in Mac IE 4.01 and 4.5 */
+
+td.navbar :link {
+   background: #900;
+   color: #fff;
+}
+
+td.navbar :visited {
+   background: #900;
+   color: #fff;
+}
+
+td.navbar :active {
+   background: #900;
+   color: #fff;
+   text-decoration: none;
+}
+
+/* next three rules for most browsers */
+
+.navbar a {
+   text-decoration: none;
+}
+
+.navbar:link {
+   background: #900;
+   color: white;
+}
+
+.navbar:visited {
+   background: #900;
+   color: #bbb;
+}
+
+.navbar:active {
+   color: #eee;
+   text-decoration: none;
+}
+
+/* ****************** Style for footer  ************** */
+
+p.copyright {
+   margin: 0 0.5em;
+   font-size: small;
+}
+
+
+
+/* ********************* donors list  **************** */
+
+div.donors {
+	margin-left: 2em;
+	margin-top: 1em;
+}
+
+.donorcomment {
+	font-style: italic;
+	margin-left: 2em;
+	display: block;
+}
+
+div.donors img {
+	border: 0;
+}
